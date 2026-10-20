@@ -10,33 +10,91 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AtmosphereRouteImport } from './routes/atmosphere'
+import { Route as ChoicesRouteImport } from './routes/choices'
+import { Route as FeelingsRouteImport } from './routes/feelings'
+import { Route as JournalRouteImport } from './routes/journal'
+import { Route as StarsRouteImport } from './routes/stars'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AtmosphereRoute = AtmosphereRouteImport.update({
+  id: '/atmosphere',
+  path: '/atmosphere',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChoicesRoute = ChoicesRouteImport.update({
+  id: '/choices',
+  path: '/choices',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FeelingsRoute = FeelingsRouteImport.update({
+  id: '/feelings',
+  path: '/feelings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JournalRoute = JournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StarsRoute = StarsRouteImport.update({
+  id: '/stars',
+  path: '/stars',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/atmosphere': typeof AtmosphereRoute
+  '/choices': typeof ChoicesRoute
+  '/feelings': typeof FeelingsRoute
+  '/journal': typeof JournalRoute
+  '/stars': typeof StarsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/atmosphere': typeof AtmosphereRoute
+  '/choices': typeof ChoicesRoute
+  '/feelings': typeof FeelingsRoute
+  '/journal': typeof JournalRoute
+  '/stars': typeof StarsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/atmosphere': typeof AtmosphereRoute
+  '/choices': typeof ChoicesRoute
+  '/feelings': typeof FeelingsRoute
+  '/journal': typeof JournalRoute
+  '/stars': typeof StarsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/atmosphere' | '/choices' | '/feelings' | '/journal' | '/stars'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/atmosphere' | '/choices' | '/feelings' | '/journal' | '/stars'
+  id:
+    | '__root__'
+    | '/'
+    | '/atmosphere'
+    | '/choices'
+    | '/feelings'
+    | '/journal'
+    | '/stars'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AtmosphereRoute: typeof AtmosphereRoute
+  ChoicesRoute: typeof ChoicesRoute
+  FeelingsRoute: typeof FeelingsRoute
+  JournalRoute: typeof JournalRoute
+  StarsRoute: typeof StarsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +106,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/atmosphere': {
+      id: '/atmosphere'
+      path: '/atmosphere'
+      fullPath: '/atmosphere'
+      preLoaderRoute: typeof AtmosphereRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/choices': {
+      id: '/choices'
+      path: '/choices'
+      fullPath: '/choices'
+      preLoaderRoute: typeof ChoicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/feelings': {
+      id: '/feelings'
+      path: '/feelings'
+      fullPath: '/feelings'
+      preLoaderRoute: typeof FeelingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journal': {
+      id: '/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof JournalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/stars': {
+      id: '/stars'
+      path: '/stars'
+      fullPath: '/stars'
+      preLoaderRoute: typeof StarsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AtmosphereRoute: AtmosphereRoute,
+  ChoicesRoute: ChoicesRoute,
+  FeelingsRoute: FeelingsRoute,
+  JournalRoute: JournalRoute,
+  StarsRoute: StarsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
