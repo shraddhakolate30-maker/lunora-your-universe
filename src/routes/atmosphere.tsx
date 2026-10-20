@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Page, PageHeader, btn, btnGhost } from "@/components/cosmos";
+import { Orbit, CloudRain, Moon, Play, Pause, type LucideIcon } from "lucide-react";
 
 export const Route = createFileRoute("/atmosphere")({
   head: () => ({
@@ -18,10 +19,10 @@ export const Route = createFileRoute("/atmosphere")({
 });
 
 type Mode = "calm" | "rain" | "silent";
-const MODES: { id: Mode; label: string; desc: string; icon: string }[] = [
-  { id: "calm", label: "Cosmic Calm", desc: "A soft, slowly breathing drone.", icon: "🌌" },
-  { id: "rain", label: "Rainy Orbit", desc: "Gentle filtered rain-like noise.", icon: "🌧️" },
-  { id: "silent", label: "Silent Space", desc: "Pure quiet. Just you and the stars.", icon: "🌑" },
+const MODES: { id: Mode; label: string; desc: string; icon: LucideIcon }[] = [
+  { id: "calm", label: "Cosmic Calm", desc: "A soft, slowly breathing drone.", icon: Orbit },
+  { id: "rain", label: "Rainy Orbit", desc: "Gentle filtered rain-like noise.", icon: CloudRain },
+  { id: "silent", label: "Silent Space", desc: "Pure quiet. Just you and the stars.", icon: Moon },
 ];
 
 function Atmosphere() {
@@ -75,14 +76,14 @@ function Atmosphere() {
       <div className="grid gap-4 sm:grid-cols-3">
         {MODES.map((m) => (
           <Button key={m.id} onClick={() => choose(m.id)} aria-pressed={mode === m.id} variant="ghost" className={`glass block h-auto p-6 text-left transition ${mode === m.id ? "shadow-glow ring-2 ring-ring" : "hover:-translate-y-1"}`}>
-            <div className="text-3xl">{m.icon}</div>
+            <m.icon aria-hidden className="mb-3 h-7 w-7 text-accent" />
             <h2 className="mt-2 text-xl">{m.label}</h2>
             <p className="text-sm text-muted-foreground">{m.desc}</p>
           </Button>
         ))}
       </div>
       <div className="glass mx-auto mt-8 flex max-w-md flex-col items-center gap-4 p-6">
-        <Button className={btn} disabled={mode === "silent"} onClick={toggle}>{playing ? "❚❚ Pause" : "▶ Play"}</Button>
+        <Button className={btn} disabled={mode === "silent"} onClick={toggle}>{playing ? <Pause /> : <Play />}{playing ? "Pause" : "Play"}</Button>
         <label className="flex w-full items-center gap-3 text-sm text-muted-foreground">
           Volume
           <input type="range" min={0} max={1} step={0.01} value={volume} onChange={(e) => setVolume(+e.target.value)} aria-label="Volume" className="min-w-0 flex-1 accent-primary" />

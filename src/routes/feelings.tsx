@@ -3,6 +3,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Page, PageHeader, btn, btnGhost, input } from "@/components/cosmos";
 import { FEELINGS, feelingLabel, uid, useLocalStore } from "@/lib/storage";
+import { Moon, Circle, CloudRain, Orbit, Sparkles, Eclipse, Star } from "lucide-react";
+
+const MOONS = { happy: Circle, calm: Moon, sad: CloudRain, confused: Orbit, excited: Sparkles, anxious: Eclipse, hopeful: Star };
 
 export const Route = createFileRoute("/feelings")({
   head: () => ({
@@ -39,17 +42,17 @@ function Feelings() {
   return (
     <Page companion="Every feeling is welcome here.">
       <PageHeader eyebrow="My Feelings" title="How is your moon tonight?" subtitle="There are no right or wrong answers — just notice, gently." />
-      <div aria-hidden className="mb-6 text-center text-6xl animate-float">🌙</div>
+      <Moon aria-hidden className="mx-auto mb-6 h-14 w-14 animate-float text-star" />
       {storageError && <p role="alert" className="mb-4 text-destructive">{storageError}</p>}
       <div className="glass mx-auto max-w-2xl p-6">
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {FEELINGS.map((f) => (
+          {FEELINGS.map((f) => { const Icon = MOONS[f.id]; return (
             <Button key={f.id} onClick={() => setSel(f.id)}
-              aria-pressed={sel === f.id} className={`h-auto flex-col rounded-lg border p-3 transition ${sel === f.id ? "border-primary bg-aurora text-primary-foreground shadow-glow" : "border-border bg-muted hover:bg-secondary"}`}>
-              <div className="text-2xl">{f.emoji}</div>
+              variant="ghost" aria-pressed={sel === f.id} className={`h-auto flex-col rounded-lg border p-3 transition ${sel === f.id ? "border-primary bg-aurora text-primary-foreground shadow-glow" : "border-border bg-muted text-foreground hover:bg-secondary"}`}>
+              <Icon aria-hidden className="mb-1 h-6 w-6" />
               <div className="text-sm">{f.label}</div>
             </Button>
-          ))}
+          ); })}
         </div>
         <textarea aria-label="Feeling note" className={`${input} mt-4 min-h-24`} maxLength={500} placeholder="Anything you'd like to add? (optional)" value={note} onChange={(e) => setNote(e.target.value)} />
         <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -69,7 +72,7 @@ function Feelings() {
             const fl = feelingLabel(f.feeling);
             return (
               <li key={f.id} className="glass grid grid-cols-[auto_minmax(0,1fr)] items-start gap-3 p-4">
-                <span className="text-3xl">{fl?.emoji}</span>
+                <Moon aria-hidden className="h-7 w-7 shrink-0 text-star" />
                 <div className="min-w-0">
                   <p className="font-medium">{fl?.label} <span className="ml-2 text-xs text-muted-foreground">{new Date(f.at).toLocaleString()}</span></p>
                   {f.note && <p className="mt-1 text-muted-foreground">{f.note}</p>}

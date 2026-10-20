@@ -22,7 +22,7 @@ const CARDS = [
 ] as const;
 function Index() {
   return <Page companion="Ready for a little adventure?">
-    <section className="relative pb-7 pt-3 text-center md:pb-10">
+    <section className="home-intro relative pb-7 pt-3 text-center md:pb-10">
       <img src={astronaut} alt="LUNORA's floating astronaut" width={816} height={816} className="mx-auto mb-3 h-28 w-28 animate-float object-contain md:h-32 md:w-32" />
       <p className="text-xs uppercase tracking-[0.18em] text-accent">Your Space. Your Universe.</p>
       <h1 className="mx-auto mt-4 max-w-3xl text-4xl leading-tight md:text-5xl">Your Little Universe,<br /><span className="text-aurora">Your Little Moments.</span></h1>
