@@ -10,7 +10,9 @@ describe("Private browser records", () => {
     const first = renderHook(() => useLocalStore("lunora.journal", existing));
     await waitFor(() => expect(first.result.current[2]).toBe(true));
     expect(first.result.current[0]).toEqual(existing);
-    act(() => first.result.current[1]([...existing, { ...existing[0], id: "new", decision: "Read" }]));
+    const old = existing[0];
+    if (!old) throw new Error("Existing fixture must contain a record");
+    act(() => first.result.current[1]([...existing, { ...old, id: "new", decision: "Read" }]));
     first.unmount();
     const next = renderHook(() => useLocalStore<typeof existing>("lunora.journal", []));
     await waitFor(() => expect(next.result.current[0]).toHaveLength(2));
