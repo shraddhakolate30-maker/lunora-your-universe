@@ -1,10 +1,14 @@
+import { Button } from "@/components/ui/button";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { Page, PageHeader, btn, btnGhost } from "@/components/cosmos";
+import { Orbit, CloudRain, Moon, Play, Pause, type LucideIcon } from "lucide-react";
 
 export const Route = createFileRoute("/atmosphere")({
   head: () => ({
     meta: [
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { title: "Cosmic Atmosphere — LUNORA" },
       { name: "description", content: "Optional ambient soundscapes generated live in your browser." },
       { property: "og:title", content: "Cosmic Atmosphere — LUNORA" },
@@ -15,10 +19,10 @@ export const Route = createFileRoute("/atmosphere")({
 });
 
 type Mode = "calm" | "rain" | "silent";
-const MODES: { id: Mode; label: string; desc: string; icon: string }[] = [
-  { id: "calm", label: "Cosmic Calm", desc: "A soft, slowly breathing drone.", icon: "🌌" },
-  { id: "rain", label: "Rainy Orbit", desc: "Gentle filtered rain-like noise.", icon: "🌧️" },
-  { id: "silent", label: "Silent Space", desc: "Pure quiet. Just you and the stars.", icon: "🌑" },
+const MODES: { id: Mode; label: string; desc: string; icon: LucideIcon }[] = [
+  { id: "calm", label: "Cosmic Calm", desc: "A soft, slowly breathing drone.", icon: Orbit },
+  { id: "rain", label: "Rainy Orbit", desc: "Gentle filtered rain-like noise.", icon: CloudRain },
+  { id: "silent", label: "Silent Space", desc: "Pure quiet. Just you and the stars.", icon: Moon },
 ];
 
 function Atmosphere() {
@@ -63,29 +67,29 @@ function Atmosphere() {
   useEffect(() => { if (gainRef.current) gainRef.current.gain.value = volume; }, [volume]);
   useEffect(() => () => { stop(); ctxRef.current?.close(); }, []);
 
-  const toggle = () => { if (playing) { stop(); setPlaying(false); } else { play(mode); setPlaying(true); } };
-  const choose = (m: Mode) => { setMode(m); if (playing) play(m); };
+  const toggle = () => { if (mode === "silent") return; if (playing) { stop(); setPlaying(false); } else { play(mode); setPlaying(true); } };
+  const choose = (m: Mode) => { setMode(m); if (m === "silent") { stop(); setPlaying(false); } else if (playing) play(m); };
 
   return (
     <Page companion="Take a slow breath. You're right where you need to be.">
       <PageHeader eyebrow="Cosmic Atmosphere" title="Tune your universe" subtitle="Optional ambient sound, created live in your browser. Nothing plays until you press play." />
       <div className="grid gap-4 sm:grid-cols-3">
         {MODES.map((m) => (
-          <button key={m.id} onClick={() => choose(m.id)} className={`glass p-6 text-left transition ${mode === m.id ? "shadow-glow ring-2 ring-ring" : "hover:-translate-y-1"}`}>
-            <div className="text-3xl">{m.icon}</div>
+          <Button key={m.id} onClick={() => choose(m.id)} aria-pressed={mode === m.id} variant="ghost" className={`glass block h-auto p-6 text-left transition ${mode === m.id ? "shadow-glow ring-2 ring-ring" : "hover:-translate-y-1"}`}>
+            <m.icon aria-hidden className="mb-3 h-7 w-7 text-accent" />
             <h2 className="mt-2 text-xl">{m.label}</h2>
             <p className="text-sm text-muted-foreground">{m.desc}</p>
-          </button>
+          </Button>
         ))}
       </div>
       <div className="glass mx-auto mt-8 flex max-w-md flex-col items-center gap-4 p-6">
-        <button className={btn} onClick={toggle}>{playing ? "❚❚ Pause" : "▶ Play"}</button>
+        <Button className={btn} disabled={mode === "silent"} onClick={toggle}>{playing ? <Pause /> : <Play />}{playing ? "Pause" : "Play"}</Button>
         <label className="flex w-full items-center gap-3 text-sm text-muted-foreground">
           Volume
-          <input type="range" min={0} max={1} step={0.01} value={volume} onChange={(e) => setVolume(+e.target.value)} className="flex-1 accent-primary" />
+          <input type="range" min={0} max={1} step={0.01} value={volume} onChange={(e) => setVolume(+e.target.value)} aria-label="Volume" className="min-w-0 flex-1 accent-primary" />
         </label>
-        {playing && mode === "silent" && <p className="text-sm text-muted-foreground">Silent Space is on — enjoy the quiet.</p>}
-        <button className={btnGhost} onClick={() => setVolume(0.4)}>Reset volume</button>
+        {mode === "silent" && <p className="text-sm text-muted-foreground">Silent Space is on — enjoy the quiet.</p>}
+        <Button className={btnGhost} onClick={() => setVolume(0.4)}>Reset volume</Button>
       </div>
     </Page>
   );

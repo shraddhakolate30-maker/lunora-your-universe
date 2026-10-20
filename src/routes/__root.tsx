@@ -13,6 +13,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Nav, Starfield } from "@/components/cosmos";
+import { Button } from "@/components/ui/button";
 
 function NotFoundComponent() {
   return (
@@ -38,7 +39,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
     <div className="flex min-h-screen items-center justify-center px-4">
       <div className="glass max-w-md p-8 text-center">
         <h1 className="text-xl">This page drifted off course</h1>
-        <button
+        <Button
           onClick={() => {
             router.invalidate();
             reset();
@@ -46,7 +47,7 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
           className="mt-6 rounded-full bg-aurora px-5 py-2 text-primary-foreground"
         >
           Try again
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -97,6 +98,7 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
   return (
     <QueryClientProvider client={queryClient}>
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:p-3 focus:text-primary-foreground">Skip to content</a>
       <Starfield />
       <Nav />
       <Outlet />
