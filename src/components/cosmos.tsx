@@ -1,6 +1,8 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useMemo, useState, useEffect, type ReactNode } from "react";
 import astronaut from "@/assets/astronaut.png";
+import { Button } from "@/components/ui/button";
+import { Menu, X, Sparkles } from "lucide-react";
 
 export function Starfield() {
   const stars = useMemo(
@@ -22,8 +24,6 @@ export function Starfield() {
           style={{ left: `${s.left}%`, top: `${s.top}%`, width: s.size, height: s.size, animationDelay: `${s.delay}s` }}
         />
       ))}
-      <div className="absolute -right-24 top-24 h-64 w-64 rounded-full bg-aurora opacity-30 blur-3xl" />
-      <div className="absolute -left-20 bottom-10 h-72 w-72 rounded-full bg-nebula-pink opacity-20 blur-3xl" />
     </div>
   );
 }
@@ -38,19 +38,21 @@ const NAV = [
 ] as const;
 
 export function Nav() {
+  const [open, setOpen] = useState(false);
+  const path = useRouterState({ select: (s) => s.location.pathname });
+  useEffect(() => setOpen(false), [path]);
   return (
-    <header className="sticky top-0 z-30 px-3 pt-3">
-      <nav className="glass mx-auto flex max-w-6xl items-center gap-2 overflow-x-auto px-4 py-2">
-        <Link to="/" className="mr-2 shrink-0 font-display text-xl tracking-wide text-aurora">
-          ☾ LUNORA
-        </Link>
-        <div className="ml-auto flex gap-1">
+    <header className="sticky top-0 z-30 border-b border-border bg-background/95 backdrop-blur-xl">
+      <nav aria-label="Main navigation" className="mx-auto grid max-w-6xl grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-5 py-4 lg:flex">
+        <Link to="/" className="min-w-0 font-display text-2xl text-foreground">☾ LUNORA</Link>
+        <Button variant="ghost" size="icon" className="lg:hidden" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} aria-controls="main-links" onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</Button>
+        <div id="main-links" className={`${open ? "grid" : "hidden"} col-span-2 grid-cols-2 gap-1 lg:ml-auto lg:flex`}>
           {NAV.map((n) => (
             <Link
               key={n.to}
               to={n.to}
               activeOptions={{ exact: true }}
-              className="shrink-0 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition hover:text-foreground"
+              className="shrink-0 rounded-md px-3 py-2 text-sm text-muted-foreground transition hover:bg-secondary hover:text-foreground"
               activeProps={{ className: "bg-secondary text-foreground" }}
             >
               {n.label}
@@ -67,25 +69,25 @@ export function Companion({ message }: { message: string }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   useEffect(() => setOpen(true), [path]);
   return (
-    <div className="fixed bottom-4 right-4 z-20 flex items-end gap-2">
+    <aside aria-label="Astronaut companion" className="mt-12 flex items-center justify-end gap-3 border-t border-border pt-5">
       {open && (
-        <div className="glass max-w-[220px] px-4 py-3 text-sm">
+        <div className="max-w-[240px] text-sm text-muted-foreground">
           <p>{message}</p>
-          <button onClick={() => setOpen(false)} className="mt-1 text-xs text-muted-foreground hover:text-foreground">
+          <Button variant="link" onClick={() => setOpen(false)} className="mt-1 h-auto p-0 text-xs text-muted-foreground hover:text-foreground">
             hide
-          </button>
+          </Button>
         </div>
       )}
-      <button onClick={() => setOpen((o) => !o)} aria-label="Astronaut companion" className="animate-float">
-        <img src={astronaut} alt="Astronaut companion" className="h-20 w-20 drop-shadow-[0_0_20px_var(--lavender)] md:h-24 md:w-24" />
-      </button>
-    </div>
+      <Button variant="ghost" onClick={() => setOpen((o) => !o)} aria-label="Astronaut companion" aria-expanded={open} className="h-16 w-16 shrink-0 p-0 hover:bg-transparent">
+        <img src={astronaut} alt="" className="h-16 w-16 animate-float object-contain" />
+      </Button>
+    </aside>
   );
 }
 
 export function PageHeader({ eyebrow, title, subtitle }: { eyebrow: string; title: string; subtitle: string }) {
   return (
-    <div className="mb-8 text-center">
+    <div className="mb-8 text-center"><Sparkles aria-hidden className="mx-auto mb-4 h-6 w-6 text-accent" />
       <p className="text-xs uppercase tracking-[0.3em] text-accent">{eyebrow}</p>
       <h1 className="mt-2 text-4xl md:text-5xl">{title}</h1>
       <p className="mx-auto mt-3 max-w-xl text-muted-foreground">{subtitle}</p>
@@ -95,7 +97,7 @@ export function PageHeader({ eyebrow, title, subtitle }: { eyebrow: string; titl
 
 export function Page({ children, companion }: { children: ReactNode; companion: string }) {
   return (
-    <main className="mx-auto max-w-5xl px-4 pb-36 pt-10">
+    <main id="main-content" className="mx-auto min-w-0 max-w-5xl px-5 pb-8 pt-8 md:pt-12">
       {children}
       <Companion message={companion} />
     </main>

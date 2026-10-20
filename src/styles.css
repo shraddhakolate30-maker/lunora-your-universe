@@ -39,8 +39,8 @@
 }
 
 :root {
-  --radius: 1.25rem;
-  --background: oklch(0.16 0.05 280);
+  --radius: 0.5rem;
+  --background: oklch(0.16 0.04 265);
   --foreground: oklch(0.96 0.02 290);
   --card: oklch(0.3 0.06 285 / 0.35);
   --card-foreground: oklch(0.96 0.02 290);
@@ -81,6 +81,12 @@
     min-height: 100vh;
   }
   h1, h2, h3 { font-family: var(--font-display); }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; }
+  main { overflow-wrap: anywhere; }
+  input, textarea, select { min-width: 0; }
+  textarea { resize: vertical; }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 4px; }
 }
 
 @utility glass {
@@ -106,3 +112,7 @@
 @keyframes float { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-14px) } }
 @keyframes twinkle { 0%,100% { opacity: .25 } 50% { opacity: 1 } }
 @keyframes portal { from { transform: scale(1); filter: brightness(1) } to { transform: scale(1.06); filter: brightness(1.5) } }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
