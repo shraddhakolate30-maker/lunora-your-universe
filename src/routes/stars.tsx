@@ -58,7 +58,7 @@ function Stars() {
         {stars.length === 0 && <p className="absolute inset-0 flex items-center justify-center p-6 text-center text-muted-foreground">Your sky is quiet. Place your first star above.</p>}
         <svg className="pointer-events-none absolute inset-0 h-full w-full">
           {stars.slice(1).map((s, i) => (
-            <line key={s.id} x1={`${stars[i].x}%`} y1={`${stars[i].y}%`} x2={`${s.x}%`} y2={`${s.y}%`} stroke="var(--lavender)" strokeOpacity="0.25" />
+            <line key={s.id} x1={`${stars[i]!.x}%`} y1={`${stars[i]!.y}%`} x2={`${s.x}%`} y2={`${s.y}%`} stroke="var(--lavender)" strokeOpacity="0.25" />
           ))}
         </svg>
         {stars.map((s, i) => (

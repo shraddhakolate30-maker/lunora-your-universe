@@ -24,8 +24,8 @@ export function randomIndex(n: number): number {
   const buf = new Uint32Array(1);
   const limit = Math.floor(0x100000000 / n) * n;
   do crypto.getRandomValues(buf);
-  while (buf[0] >= limit);
-  return buf[0] % n;
+  while (buf[0]! >= limit);
+  return buf[0]! % n;
 }
 
 export const FEELINGS = [
