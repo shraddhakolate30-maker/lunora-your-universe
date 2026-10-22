@@ -44,22 +44,29 @@ function Atmosphere() {
     gainRef.current.gain.value = volume;
     const out = gainRef.current;
     if (m === "calm") {
-      [110, 164.8, 220, 277.2].forEach((f, i) => {
+      // Warm sub-foundation plus a soft harmonic chord, each breathing slowly.
+      [55, 110, 164.8, 220, 277.2, 329.6].forEach((f, i) => {
         const o = ctx.createOscillator(); o.type = "sine"; o.frequency.value = f;
-        const g = ctx.createGain(); g.gain.value = 0.08;
-        const lfo = ctx.createOscillator(); lfo.frequency.value = 0.05 + i * 0.03;
-        const lg = ctx.createGain(); lg.gain.value = 0.05; lfo.connect(lg).connect(g.gain);
+        const g = ctx.createGain(); g.gain.value = i === 0 ? 0.1 : 0.06;
+        const lfo = ctx.createOscillator(); lfo.frequency.value = 0.04 + i * 0.025;
+        const lg = ctx.createGain(); lg.gain.value = 0.04; lfo.connect(lg).connect(g.gain);
         o.connect(g).connect(out); o.start(); lfo.start();
         nodesRef.current.push(o, lfo);
       });
     } else {
+      // Layered filtered noise: a soft low wash plus a gentle high patter.
       const buf = ctx.createBuffer(1, ctx.sampleRate * 2, ctx.sampleRate);
       const d = buf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
-      const src = ctx.createBufferSource(); src.buffer = buf; src.loop = true;
-      const f = ctx.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 1200; f.Q.value = 0.6;
-      const g = ctx.createGain(); g.gain.value = 0.5;
-      src.connect(f).connect(g).connect(out); src.start();
-      nodesRef.current.push(src);
+      const mk = (freq: number, q: number, level: number) => {
+        const src = ctx.createBufferSource(); src.buffer = buf; src.loop = true;
+        const f = ctx.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = freq; f.Q.value = q;
+        const g = ctx.createGain(); g.gain.value = level;
+        src.connect(f).connect(g).connect(out); src.start();
+        nodesRef.current.push(src);
+      };
+      mk(500, 0.4, 0.35);
+      mk(1400, 0.6, 0.3);
+      mk(3200, 0.8, 0.12);
     }
     ctx.resume();
   }
