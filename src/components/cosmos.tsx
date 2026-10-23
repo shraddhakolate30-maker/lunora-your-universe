@@ -35,6 +35,7 @@ const NAV = [
   { to: "/stars", label: "Stars" },
   { to: "/journal", label: "Journal" },
   { to: "/atmosphere", label: "Atmosphere" },
+  { to: "/reflect", label: "Reflect" },
 ] as const;
 
 export function Nav() {
