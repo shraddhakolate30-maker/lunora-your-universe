@@ -14,6 +14,7 @@ import { Route as AtmosphereRouteImport } from './routes/atmosphere'
 import { Route as ChoicesRouteImport } from './routes/choices'
 import { Route as FeelingsRouteImport } from './routes/feelings'
 import { Route as JournalRouteImport } from './routes/journal'
+import { Route as ReflectRouteImport } from './routes/reflect'
 import { Route as StarsRouteImport } from './routes/stars'
 
 const IndexRoute = IndexRouteImport.update({
@@ -41,6 +42,11 @@ const JournalRoute = JournalRouteImport.update({
   path: '/journal',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReflectRoute = ReflectRouteImport.update({
+  id: '/reflect',
+  path: '/reflect',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StarsRoute = StarsRouteImport.update({
   id: '/stars',
   path: '/stars',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/choices': typeof ChoicesRoute
   '/feelings': typeof FeelingsRoute
   '/journal': typeof JournalRoute
+  '/reflect': typeof ReflectRoute
   '/stars': typeof StarsRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/choices': typeof ChoicesRoute
   '/feelings': typeof FeelingsRoute
   '/journal': typeof JournalRoute
+  '/reflect': typeof ReflectRoute
   '/stars': typeof StarsRoute
 }
 export interface FileRoutesById {
@@ -70,14 +78,28 @@ export interface FileRoutesById {
   '/choices': typeof ChoicesRoute
   '/feelings': typeof FeelingsRoute
   '/journal': typeof JournalRoute
+  '/reflect': typeof ReflectRoute
   '/stars': typeof StarsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/atmosphere' | '/choices' | '/feelings' | '/journal' | '/stars'
+    | '/'
+    | '/atmosphere'
+    | '/choices'
+    | '/feelings'
+    | '/journal'
+    | '/reflect'
+    | '/stars'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/atmosphere' | '/choices' | '/feelings' | '/journal' | '/stars'
+  to:
+    | '/'
+    | '/atmosphere'
+    | '/choices'
+    | '/feelings'
+    | '/journal'
+    | '/reflect'
+    | '/stars'
   id:
     | '__root__'
     | '/'
@@ -85,6 +107,7 @@ export interface FileRouteTypes {
     | '/choices'
     | '/feelings'
     | '/journal'
+    | '/reflect'
     | '/stars'
   fileRoutesById: FileRoutesById
 }
@@ -94,6 +117,7 @@ export interface RootRouteChildren {
   ChoicesRoute: typeof ChoicesRoute
   FeelingsRoute: typeof FeelingsRoute
   JournalRoute: typeof JournalRoute
+  ReflectRoute: typeof ReflectRoute
   StarsRoute: typeof StarsRoute
 }
 
@@ -134,6 +158,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JournalRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reflect': {
+      id: '/reflect'
+      path: '/reflect'
+      fullPath: '/reflect'
+      preLoaderRoute: typeof ReflectRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/stars': {
       id: '/stars'
       path: '/stars'
@@ -150,6 +181,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChoicesRoute: ChoicesRoute,
   FeelingsRoute: FeelingsRoute,
   JournalRoute: JournalRoute,
+  ReflectRoute: ReflectRoute,
   StarsRoute: StarsRoute,
 }
 export const routeTree = rootRouteImport

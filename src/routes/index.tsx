@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Page } from "@/components/cosmos";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Orbit, Moon, Star, BookOpen, AudioLines } from "lucide-react";
+import { ArrowRight, Orbit, Moon, Star, BookOpen, AudioLines, Telescope } from "lucide-react";
 import astronaut from "@/assets/astronaut.png";
 
 export const Route = createFileRoute("/")({
@@ -19,6 +19,7 @@ const CARDS = [
   { to: "/stars", title: "My Stars", text: "Thoughts and wishes worth keeping.", icon: Star, color: "text-star" },
   { to: "/journal", title: "Cosmic Journal", text: "Little moments, lasting memories.", icon: BookOpen, color: "text-lavender" },
   { to: "/atmosphere", title: "Cosmic Atmosphere", text: "A softer soundtrack for your space.", icon: AudioLines, color: "text-accent" },
+  { to: "/reflect", title: "Reflection Companion", text: "A gentle question for choices you're weighing.", icon: Telescope, color: "text-lavender" },
 ] as const;
 function Index() {
   return <Page companion="Ready for a little adventure?">
