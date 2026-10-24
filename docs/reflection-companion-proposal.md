@@ -1,14 +1,14 @@
 # Optional open-weight reflection companion
 
-Status: proposed only, not integrated. No personal content is sent to AI today.
+Status: integrated on the optional /reflect page. Real Qwen3-0.6B download and browser-local CPU generation verified in Chromium on 2026-10-24. Submitted options are passed only to the browser worker; journal, feelings and stars are not accessed. Hardware GPU performance and cross-browser compatibility are not verified.
 
 ## Model and method
-Use **Qwen3-0.6B**, an Apache-2.0 open-weight model, with the community ONNX conversion through **Transformers.js**. Load quantized `q4f16` weights only after a separate download consent step. Run inference in a browser Web Worker with WebGPU, with streamed replies and a cancel control. Pin and review the community conversion before implementation.
+Uses **Qwen3-0.6B**, an Apache-2.0 open-weight model, with the community ONNX conversion through **Transformers.js**. Download is consent-gated. The worker chooses `q4f16` only on adapters supporting shader-f16, otherwise `q4`, with WASM CPU fallback. Streaming and cancellation are provided. The community conversion currently resolves main (observed revision 58ca03a5e7b354b480b1a82b34bde8dc7b854cc0); pinning and a wider safety review remain release-hardening work.
 
-The companion would ask gentle, non-judgmental questions about text the user explicitly selects. It must never choose options, diagnose, or present itself as a therapist. The small model's quality, instruction-following, and safety require evaluation before enabling it.
+The companion is prompted to ask gentle, non-judgmental questions about explicitly submitted options. It is instructed never to choose options, diagnose, or present itself as a therapist. The verified response was generic: "How do you feel about your choice this year?" Broader relevance, instruction-following and safety evaluation remain necessary; prompt instructions are not guarantees.
 
 ## Privacy
-Inference stays on the device; journal text is not sent to an inference service. Downloading the runtime and weights still contacts the asset host, exposing ordinary request metadata such as IP address. Model files may be cached locally. Do not load full journal history automatically. Provide consent, selected-text preview, clear-chat, and delete-model-cache controls.
+Inference stays on the device; journal text is not sent to an inference service. Downloading runtime and weights contacts Hugging Face and jsDelivr, exposing ordinary request metadata such as IP address. No request contained test input and no non-GET requests occurred in the verified flow. Model caching is best-effort; Chromium reported a cache write warning for the large weights. Dedicated cache-deletion controls are not yet implemented, so guaranteed offline reuse on later visits is not claimed.
 
 ## Compatibility and costs
 The original weights are approximately 1.5 GB; the quantized download is smaller but its exact size must be confirmed from the pinned files. Expect significant first-load time and memory usage. Browser/WebGPU and device support vary, especially on mobile. No per-token fee for local inference, but hosting/bandwidth and the user's data allowance, memory and battery are real costs. Offer non-AI prompts when unsupported rather than silently sending content elsewhere.
