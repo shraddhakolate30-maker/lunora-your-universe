@@ -3,6 +3,11 @@ export interface ChatMessage {
   content: string;
 }
 
+/** Half-precision weights require the adapter's shader-f16 feature. */
+export function reflectionGpuDtype(supportsF16: boolean): "q4f16" | "q4" {
+  return supportsF16 ? "q4f16" : "q4";
+}
+
 export const REFLECT_SYSTEM = [
   "You are LUNORA's gentle reflection companion.",
   "The user is weighing two options and shared what matters most to them.",

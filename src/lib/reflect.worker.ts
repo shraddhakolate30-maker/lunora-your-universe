@@ -1,6 +1,6 @@
 /// <reference lib="webworker" />
 import { AutoTokenizer, AutoModelForCausalLM, TextStreamer, env } from "@huggingface/transformers";
-import { buildReflectionMessages } from "./reflect";
+import { buildReflectionMessages, reflectionGpuDtype } from "./reflect";
 
 env.allowLocalModels = false;
 
@@ -26,8 +26,11 @@ async function load() {
   try {
     tokenizer = await AutoTokenizer.from_pretrained(MODEL_ID);
     try {
+      const gpu = (navigator as unknown as { gpu?: { requestAdapter(): Promise<{ features: { has(feature: string): boolean } } | null> } }).gpu;
+      const adapter = await gpu?.requestAdapter();
+      if (!adapter) throw new Error("WebGPU is unavailable.");
       model = await AutoModelForCausalLM.from_pretrained(MODEL_ID, {
-        dtype: "q4f16",
+        dtype: reflectionGpuDtype(adapter.features.has("shader-f16")),
         device: "webgpu",
         progress_callback: progress,
       });

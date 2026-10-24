@@ -1,5 +1,14 @@
 import { describe, it, expect } from "vitest";
-import { buildReflectionMessages, validReflectionInput, REFLECT_SYSTEM } from "@/lib/reflect";
+import { buildReflectionMessages, validReflectionInput, REFLECT_SYSTEM, reflectionGpuDtype } from "@/lib/reflect";
+
+describe("reflection graphics compatibility", () => {
+  it("uses full-precision q4 when half-precision shaders are unavailable", () => {
+    expect(reflectionGpuDtype(false)).toBe("q4");
+  });
+  it("uses q4f16 only when the adapter supports half-precision shaders", () => {
+    expect(reflectionGpuDtype(true)).toBe("q4f16");
+  });
+});
 
 describe("reflection companion input", () => {
   it("requires two non-empty options", () => {
