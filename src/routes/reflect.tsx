@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Page, PageHeader, btn, btnGhost, input } from "@/components/cosmos";
 import { Button } from "@/components/ui/button";
 import { validReflectionInput } from "@/lib/reflect";
-import { Telescope, Download, Sparkles, RotateCcw, X, ShieldCheck } from "lucide-react";
+import { Download, Sparkles, RotateCcw, X, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/reflect")({
   head: () => ({
@@ -43,7 +43,7 @@ function Reflect() {
     const worker = new Worker(new URL("../lib/reflect.worker.ts", import.meta.url), { type: "module" });
     worker.onmessage = (e: MessageEvent) => {
       const d = e.data as { type: string; progress?: number; device?: string; text?: string; detail?: string };
-      if (d.type === "progress") setProgress(Math.round((d.progress ?? 0) * 100));
+      if (d.type === "progress") setProgress(Math.max(0, Math.min(100, Math.round(d.progress ?? 0))));
       if (d.type === "ready") {
         setDevice(d.device === "webgpu" ? "your graphics chip" : "your processor");
         setPhase("ready");
@@ -71,7 +71,13 @@ function Reflect() {
     setPhase("loading");
     setProgress(0);
     setError("");
-    startWorker().postMessage({ type: "load" });
+    try {
+      startWorker().postMessage({ type: "load" });
+    } catch {
+      stopWorker();
+      setError("The companion could not start on this device. Nothing you typed was sent anywhere.");
+      setPhase("error");
+    }
   }
 
   function reflect() {
@@ -84,11 +90,12 @@ function Reflect() {
   function cancel() {
     // Terminating the worker stops generation; the downloaded model stays cached.
     stopWorker();
-    setPhase("ready");
+    setPhase("consent");
     setReflection("");
   }
 
   function retry() {
+    stopWorker();
     setError("");
     setPhase("consent");
   }
@@ -107,8 +114,8 @@ function Reflect() {
         <div className="glass mb-6 flex items-start gap-3 p-4 text-sm text-muted-foreground">
           <ShieldCheck aria-hidden className="mt-0.5 h-5 w-5 shrink-0 text-accent" />
           <p>
-            Completely private: the AI model downloads once to this browser (about 400&nbsp;MB from Hugging Face, the model's
-            host) and then runs on your device. What you type here is never sent to any server, and nothing is saved unless
+             The AI model downloads to this browser from Hugging Face and then runs on your device. The download is several
+             hundred MB and may be larger if your device needs a different version. The model and runtime hosts receive ordinary download metadata, not your entries. What you type here is never sent to any server, and nothing is saved unless
             you copy it yourself. Your journal, feelings and stars are never shared with it.
           </p>
         </div>
@@ -119,7 +126,7 @@ function Reflect() {
               <Download />Download the companion
             </Button>
             <p className="mt-3 text-xs text-muted-foreground">
-              One-time download, then it works offline in this browser. You can delete it anytime by clearing this site's data.
+               Cached files may be reused on later visits. Your device needs enough memory to run the model.
             </p>
           </div>
         )}
@@ -131,6 +138,7 @@ function Reflect() {
               <div className="h-full bg-aurora transition-all" style={{ width: `${progress}%` }} />
             </div>
             <p className="mt-3 text-xs text-muted-foreground">This can take a few minutes on first download.</p>
+             <Button className={`${btnGhost} mt-3`} onClick={cancel}><X />Cancel</Button>
           </div>
         )}
 
@@ -143,7 +151,7 @@ function Reflect() {
           </div>
         )}
 
-        {(editing || phase === "reflecting") && (
+        {(
           <>
             <div className="space-y-3">
               <label className="block text-sm text-muted-foreground">

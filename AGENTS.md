@@ -13,3 +13,4 @@
 - Use the shared Button for interactive controls and global semantic CSS tokens for visual roles; this keeps focus states and theming consistent.
 - Keep random-choice option validation in the browser-safe choices module and randomness cryptographic; the decision tool must never depend on an AI or network service.
 - Keep the astronaut companion in document flow and collapse navigation below desktop widths; personal content must remain unobscured on small screens.
+- Pre-optimize Transformers.js and emit ES-module workers; lazy dependency discovery otherwise reloads the page during the first consented download. Keep inference inside the browser worker and never send reflection inputs through network requests.

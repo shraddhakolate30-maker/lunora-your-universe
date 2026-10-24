@@ -6,3 +6,5 @@
 - [x] Privacy: on-device inference, no journal/feelings/stars access, no conversation storage, no API key
 - [x] Add nav entry + home card; preserve all existing features
 - [ ] Verify: tests, build, browser flow incl. real model download + generation
+- [ ] Fix first-launch dependency reload, progress reporting and cancellation recovery
+- [ ] Inspect actual inference network traffic for submitted input
