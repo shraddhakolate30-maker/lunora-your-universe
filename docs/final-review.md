@@ -23,4 +23,7 @@
 - Listen to both soundscapes and test device volume on real laptop/phone speakers and headphones. Automated checks validate controls, not perceived audio quality.
 - Safari/iOS/Firefox, real touch hardware, screen readers and keyboard-only accessibility require manual review; Chromium viewport checks are not real-device testing.
 - Private browsing, storage quota behavior and device-specific audio permissions deserve manual checks.
-- Optional AI is a proposal only; see reflection-companion-proposal.md for Qwen3-0.6B, browser-local integration, privacy, costs and implementation gates. It is not integrated.
+- Reflection Companion is now integrated: real Qwen3-0.6B q4 download and CPU inference verified in Chromium on 2026-10-24. The response was "How do you feel about your choice this year?" No test inputs appeared in network URLs/bodies and all requests were GETs. See reflection-companion-proposal.md for limitations.
+- First-launch failure was Vite discovering the worker-only Transformers dependency and reloading the page mid-download; explicit pre-optimization fixes this. Worker output now uses ES modules. Fixed percent scaling, exposed inputs before download, and made worker termination return to a reloadable state.
+- GPU q4f16 loading succeeded but failed during execution on an adapter lacking shader-f16. The worker now checks that capability and uses q4 when necessary. Software-emulated GPU q4 initialization succeeded, but generation was too slow to verify; real hardware GPU generation remains unverified.
+- Best-effort model caching emitted a cache write warning; later-visit offline availability is not guaranteed. The real response was generic; broad quality/safety testing remains outstanding.
